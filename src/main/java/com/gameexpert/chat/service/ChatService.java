@@ -36,7 +36,6 @@ public class ChatService {
         World world = worldRepository.findById(worldId).orElseThrow(
                 () -> new NotFoundException("WORLD_NOT_FOUND"));
 
-        ;
 
         return savedResponse(worldId, chatMessageRepository.save(new ChatMessage(world, sender, content)));
     }
