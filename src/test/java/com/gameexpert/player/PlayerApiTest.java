@@ -64,7 +64,7 @@ class PlayerApiTest {
         verifyNoInteractions(playerService);
     }
 
-    // @Test
+   // @Test
     void rejectsMissingNicknameBeforeCallingService() throws Exception {
         mockMvc.perform(post("/players")
                         .contentType(MediaType.APPLICATION_JSON)
