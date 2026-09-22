@@ -1,6 +1,7 @@
 package com.gameexpert.ws;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,8 +54,8 @@ public class NicknameHandshakeInterceptor implements HandshakeInterceptor {
         }
 
         // TODO Lv 7: 닉네임으로 플레이어를 조회합니다. 없으면 null을 사용합니다.
-        Player player = null;
-        if (player == null) {
+        Optional<Player> player = playerRepository.findByNickname(nickname);
+        if (player.isEmpty()) {
             attributes.put(ATTR_ERROR_CODE, 4000);
             return true;
         }
@@ -65,17 +66,19 @@ public class NicknameHandshakeInterceptor implements HandshakeInterceptor {
             return true;
         }
         // TODO Lv 7: worldId로 월드를 조회합니다. 없으면 null을 사용합니다.
-        World world = null;
-        if (world == null || worldRepository.isDimensionChild(worldId)) {
+        Optional<World> world = worldRepository.findById(worldId);
+        if (world.isEmpty() || worldRepository.isDimensionChild(worldId)) {
             attributes.put(ATTR_ERROR_CODE, 4001);
             return true;
         }
 
         // TODO Lv 7: nickname과 worldId를 ATTR_NICKNAME, ATTR_WORLD_ID 키로 attributes에 저장합니다.
 
-        attributes.put(ATTR_PLAYER_ID, player.getId());
-        attributes.put(ATTR_WORLD_SEED, (int) world.getSeed());
-        attributes.put(ATTR_WORLD_DIFFICULTY, world.getDifficulty());
+        attributes.put(ATTR_NICKNAME, nickname);
+        attributes.put(ATTR_WORLD_ID, worldId);
+        attributes.put(ATTR_PLAYER_ID, player.get().getId());
+        attributes.put(ATTR_WORLD_SEED, (int) world.get().getSeed());
+        attributes.put(ATTR_WORLD_DIFFICULTY, world.get().getDifficulty());
         return true;
     }
 
