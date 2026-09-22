@@ -2,6 +2,7 @@ package com.gameexpert.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -25,6 +26,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         // TODO Lv 8: 제공된 인터셉터를 핸들러 등록에 연결합니다.
         registry.addHandler(gameWebSocketHandler, "/ws/worlds/{worldId}")
+                .addInterceptors(nicknameInterceptor)
                 .setAllowedOriginPatterns(properties.wsAllowedOrigins().toArray(String[]::new));
     }
 }
